@@ -1,6 +1,6 @@
 "use client"
 
-import { BookOpen, Home, Sparkles, GraduationCap, Languages } from "lucide-react"
+import { BookOpen, Home, Sparkles, GraduationCap, Languages, BookText, Mic } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface AppSidebarProps {
@@ -10,17 +10,19 @@ interface AppSidebarProps {
 
 const navItems = [
   {
-    group: "Học Tập",
+    group: "Hoc Tap",
     items: [
-      { id: "dashboard", label: "Tổng Quan", icon: Home },
-      { id: "learning-room", label: "Phòng Học Tương Tác", icon: GraduationCap },
-      { id: "english", label: "Lộ trình Tiếng Anh", flag: "🇬🇧" },
-      { id: "japanese", label: "Lộ trình Tiếng Nhật", flag: "🇯🇵" },
+      { id: "dashboard", label: "Tong Quan", icon: Home },
+      { id: "learning-room", label: "Phong Hoc Tuong Tac", icon: GraduationCap },
+      { id: "reading-room", label: "Phong Doc Thong Minh", icon: BookText },
+      { id: "pronunciation", label: "Luyen Phat Am", icon: Mic },
+      { id: "english", label: "Lo trinh Tieng Anh", flag: "GB" },
+      { id: "japanese", label: "Lo trinh Tieng Nhat", flag: "JP" },
     ],
   },
   {
-    group: "Công Cụ Trợ Giảng",
-    items: [{ id: "ai-lab", label: "Phòng Lab AI", icon: Sparkles }],
+    group: "Cong Cu Tro Giang",
+    items: [{ id: "ai-lab", label: "Phong Lab AI", icon: Sparkles }],
   },
 ]
 
@@ -78,8 +80,8 @@ export function AppSidebar({ activeView, onNavigate }: AppSidebarProps) {
             HV
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-foreground truncate">Học Viên</p>
-            <p className="text-xs text-muted-foreground">Tài khoản Miễn phí</p>
+            <p className="text-sm font-semibold text-foreground truncate">{"Hoc Vien"}</p>
+            <p className="text-xs text-muted-foreground">{"Tai khoan Mien phi"}</p>
           </div>
         </div>
       </div>

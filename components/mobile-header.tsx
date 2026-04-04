@@ -17,6 +17,8 @@ interface MobileHeaderProps {
 const navOptions = [
   { value: "dashboard", label: "Tong Quan" },
   { value: "learning-room", label: "Phong Hoc" },
+  { value: "reading-room", label: "Phong Doc" },
+  { value: "pronunciation", label: "Phat Am" },
   { value: "english", label: "Tieng Anh" },
   { value: "japanese", label: "Tieng Nhat" },
   { value: "ai-lab", label: "Phong Lab AI" },

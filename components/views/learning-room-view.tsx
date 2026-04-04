@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
   BookOpen, 
   RotateCcw, 
@@ -21,9 +22,12 @@ import {
   Briefcase,
   Plane,
   ShoppingCart,
-  Heart
+  Heart,
+  Zap
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { AITutorChat } from "@/components/ai-tutor-chat"
+import { DynamicLessonGenerator, GeneratedLesson } from "@/components/dynamic-lesson-generator"
 
 // Flashcard data
 const flashcards = [
@@ -164,14 +168,15 @@ const quizQuestions = [
 ]
 
 // Flashcard Component
-function FlashcardSection() {
+function FlashcardSection({ generatedLesson }: { generatedLesson?: GeneratedLesson | null }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
   const [knownCards, setKnownCards] = useState<number[]>([])
   const [reviewCards, setReviewCards] = useState<number[]>([])
 
-  const currentCard = flashcards[currentIndex]
-  const progress = ((knownCards.length + reviewCards.length) / flashcards.length) * 100
+  const cardsData = generatedLesson?.flashcards || flashcards
+  const currentCard = cardsData[currentIndex]
+  const progress = ((knownCards.length + reviewCards.length) / cardsData.length) * 100
 
   const handleKnown = () => {
     setKnownCards([...knownCards, currentCard.id])
@@ -186,7 +191,7 @@ function FlashcardSection() {
   const nextCard = () => {
     setIsFlipped(false)
     setTimeout(() => {
-      if (currentIndex < flashcards.length - 1) {
+      if (currentIndex < cardsData.length - 1) {
         setCurrentIndex(currentIndex + 1)
       }
     }, 200)
@@ -211,7 +216,7 @@ function FlashcardSection() {
             <CardDescription>Lật thẻ để kiểm tra trí nhớ - Active Recall</CardDescription>
           </div>
           <Badge variant="outline" className="border-primary/50 text-primary">
-            {currentIndex + 1} / {flashcards.length}
+            {currentIndex + 1} / {cardsData.length}
           </Badge>
         </div>
         <Progress value={progress} className="h-2 mt-3" />
@@ -221,7 +226,7 @@ function FlashcardSection() {
         </div>
       </CardHeader>
       <CardContent>
-        {currentIndex < flashcards.length ? (
+        {currentIndex < cardsData.length ? (
           <>
             {/* 3D Flip Card */}
             <div 
@@ -428,14 +433,15 @@ function GrammarSection() {
 }
 
 // Quiz Section Component
-function QuizSection() {
+function QuizSection({ generatedLesson }: { generatedLesson?: GeneratedLesson | null }) {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showExplanation, setShowExplanation] = useState(false)
   const [score, setScore] = useState(0)
   const [completed, setCompleted] = useState(false)
 
-  const question = quizQuestions[currentQuestion]
+  const questionsData = generatedLesson?.quiz || quizQuestions
+  const question = questionsData[currentQuestion]
 
   const handleSelect = (index: number) => {
     if (selectedAnswer !== null) return
@@ -447,7 +453,7 @@ function QuizSection() {
   }
 
   const nextQuestion = () => {
-    if (currentQuestion < quizQuestions.length - 1) {
+    if (currentQuestion < questionsData.length - 1) {
       setCurrentQuestion(currentQuestion + 1)
       setSelectedAnswer(null)
       setShowExplanation(false)
@@ -458,10 +464,10 @@ function QuizSection() {
 
   const resetQuiz = () => {
     setCurrentQuestion(0)
-    setSelectedAnswer(null)
-    setShowExplanation(false)
     setScore(0)
     setCompleted(false)
+    setSelectedAnswer(null)
+    setShowExplanation(false)
   }
 
   return (
@@ -477,11 +483,11 @@ function QuizSection() {
           </div>
           {!completed && (
             <Badge variant="outline" className="border-primary/50 text-primary">
-              Câu {currentQuestion + 1} / {quizQuestions.length}
+              Câu {currentQuestion + 1} / {questionsData.length}
             </Badge>
           )}
         </div>
-        {!completed && <Progress value={((currentQuestion + 1) / quizQuestions.length) * 100} className="h-2 mt-3" />}
+        {!completed && <Progress value={((currentQuestion + 1) / questionsData.length) * 100} className="h-2 mt-3" />}
       </CardHeader>
       <CardContent>
         {!completed ? (
@@ -570,23 +576,23 @@ function QuizSection() {
           <div className="text-center py-8">
             <div className={cn(
               "inline-flex items-center justify-center w-20 h-20 rounded-full mb-4",
-              score >= quizQuestions.length * 0.8 ? "bg-emerald-500/20" : 
-              score >= quizQuestions.length * 0.5 ? "bg-amber-500/20" : "bg-red-500/20"
+              score >= questionsData.length * 0.8 ? "bg-emerald-500/20" : 
+              score >= questionsData.length * 0.5 ? "bg-amber-500/20" : "bg-red-500/20"
             )}>
               <span className={cn(
                 "text-3xl font-bold",
-                score >= quizQuestions.length * 0.8 ? "text-emerald-400" : 
-                score >= quizQuestions.length * 0.5 ? "text-amber-400" : "text-red-400"
+                score >= questionsData.length * 0.8 ? "text-emerald-400" : 
+                score >= questionsData.length * 0.5 ? "text-amber-400" : "text-red-400"
               )}>
-                {score}/{quizQuestions.length}
+                {score}/{questionsData.length}
               </span>
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">
-              {score >= quizQuestions.length * 0.8 ? "Xuất sắc!" : 
-               score >= quizQuestions.length * 0.5 ? "Khá tốt!" : "Cần cố gắng thêm!"}
+              {score >= questionsData.length * 0.8 ? "Xuất sắc!" : 
+               score >= questionsData.length * 0.5 ? "Khá tốt!" : "Cần cố gắng thêm!"}
             </h3>
             <p className="text-muted-foreground mb-6">
-              Bạn trả lời đúng {score} / {quizQuestions.length} câu hỏi
+              Bạn trả lời đúng {score} / {questionsData.length} câu hỏi
             </p>
             <Button onClick={resetQuiz} variant="outline">
               <RotateCcw className="h-4 w-4 mr-2" />
@@ -601,15 +607,33 @@ function QuizSection() {
 
 // Main Learning Room View
 export function LearningRoomView() {
-  const [activeTab, setActiveTab] = useState<"flashcard" | "grammar" | "quiz">("flashcard")
+  const [activeTab, setActiveTab] = useState<"flashcard" | "grammar" | "quiz" | "ai-practice">("flashcard")
+  const [generatorOpen, setGeneratorOpen] = useState(false)
+  const [generatedLesson, setGeneratedLesson] = useState<GeneratedLesson | null>(null)
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground mb-2">Phong Hoc Tuong Tac</h1>
-        <p className="text-muted-foreground">Micro-learning - Chia nho kien thuc de hoc hieu qua hon</p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Phong Hoc Tuong Tac</h1>
+          <p className="text-muted-foreground">Micro-learning - Chia nho kien thuc de hoc hieu qua hon</p>
+        </div>
+        <Button 
+          onClick={() => setGeneratorOpen(true)}
+          className="gap-2"
+          variant="outline"
+        >
+          <Sparkles className="h-4 w-4" />
+          Sinh Bai Hoc
+        </Button>
       </div>
+
+      <DynamicLessonGenerator 
+        open={generatorOpen}
+        onOpenChange={setGeneratorOpen}
+        onLessonGenerated={setGeneratedLesson}
+      />
 
       {/* Tab Navigation */}
       <div className="flex gap-2 p-1 bg-secondary/50 rounded-xl">
@@ -637,24 +661,41 @@ export function LearningRoomView() {
           <BookOpen className="h-4 w-4" />
           Ngu Phap
         </button>
-        <button
-          onClick={() => setActiveTab("quiz")}
-          className={cn(
-            "flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2",
-            activeTab === "quiz" 
-              ? "bg-primary text-primary-foreground" 
-              : "text-muted-foreground hover:text-foreground"
-          )}
-        >
-          <Sparkles className="h-4 w-4" />
-          Trac Nghiem
-        </button>
+      <button
+        onClick={() => setActiveTab("quiz")}
+        className={cn(
+          "flex-1 py-2 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2",
+          activeTab === "quiz"
+            ? "bg-primary text-primary-foreground"
+            : "bg-muted text-muted-foreground hover:text-foreground"
+        )}
+      >
+        <Sparkles className="h-4 w-4" />
+        Trac Nghiem
+      </button>
+      <button
+        onClick={() => setActiveTab("ai-practice")}
+        className={cn(
+          "flex-1 py-2 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2",
+          activeTab === "ai-practice"
+            ? "bg-primary text-primary-foreground"
+            : "bg-muted text-muted-foreground hover:text-foreground"
+        )}
+      >
+        <Zap className="h-4 w-4" />
+        Thuc Hanh AI
+      </button>
       </div>
 
       {/* Content */}
-      {activeTab === "flashcard" && <FlashcardSection />}
+      {activeTab === "flashcard" && <FlashcardSection generatedLesson={generatedLesson} />}
       {activeTab === "grammar" && <GrammarSection />}
-      {activeTab === "quiz" && <QuizSection />}
+      {activeTab === "quiz" && <QuizSection generatedLesson={generatedLesson} />}
+      {activeTab === "ai-practice" && (
+        <div className="mt-6">
+          <AITutorChat />
+        </div>
+      )}
     </div>
   )
 }
