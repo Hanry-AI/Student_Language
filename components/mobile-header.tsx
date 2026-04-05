@@ -22,6 +22,8 @@ const navOptions = [
   { value: "english", label: "Tieng Anh" },
   { value: "japanese", label: "Tieng Nhat" },
   { value: "ai-lab", label: "Phong Lab AI" },
+  { value: "vocabulary-bank", label: "Tu Vung" },
+  { value: "analytics", label: "Phan Tich" },
 ]
 
 export function MobileHeader({ activeView, onNavigate }: MobileHeaderProps) {

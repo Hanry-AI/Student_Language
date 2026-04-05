@@ -1,6 +1,6 @@
 "use client"
 
-import { BookOpen, Home, Sparkles, GraduationCap, Languages, BookText, Mic } from "lucide-react"
+import { BookOpen, Home, Sparkles, GraduationCap, Languages, BookText, Mic, BarChart3, BookMarked, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface AppSidebarProps {
@@ -22,7 +22,11 @@ const navItems = [
   },
   {
     group: "Cong Cu Tro Giang",
-    items: [{ id: "ai-lab", label: "Phong Lab AI", icon: Sparkles }],
+    items: [
+      { id: "ai-lab", label: "Phong Lab AI", icon: Sparkles },
+      { id: "vocabulary-bank", label: "So Tay Tu Vung", icon: BookMarked },
+      { id: "analytics", label: "Phan tich Hoc Tap", icon: BarChart3 },
+    ],
   },
 ]
 

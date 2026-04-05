@@ -10,11 +10,16 @@ import { AILabView } from "@/components/views/ai-lab-view"
 import { LearningRoomView } from "@/components/views/learning-room-view"
 import { ReadingRoomView } from "@/components/views/reading-room-view"
 import { PronunciationView } from "@/components/views/pronunciation-view"
+import { VocabularyBankView } from "@/components/views/vocabulary-bank-view"
+import { PlacementTestView } from "@/components/views/placement-test-view"
+import { AnalyticsView } from "@/components/views/analytics-view"
+import { SettingsDialog } from "@/components/settings-dialog"
 
-type ViewType = "dashboard" | "english" | "japanese" | "ai-lab" | "learning-room" | "reading-room" | "pronunciation"
+type ViewType = "dashboard" | "english" | "japanese" | "ai-lab" | "learning-room" | "reading-room" | "pronunciation" | "vocabulary-bank" | "analytics"
 
 export default function PolyglotHub() {
   const [activeView, setActiveView] = useState<ViewType>("dashboard")
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   const handleNavigate = (view: string) => {
     setActiveView(view as ViewType)
@@ -30,6 +35,10 @@ export default function PolyglotHub() {
         return <ReadingRoomView />
       case "pronunciation":
         return <PronunciationView />
+      case "vocabulary-bank":
+        return <VocabularyBankView />
+      case "analytics":
+        return <AnalyticsView />
       case "english":
         return <EnglishView />
       case "japanese":
